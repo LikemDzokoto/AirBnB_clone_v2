@@ -19,6 +19,14 @@ class TestState(unittest.TestCase):
         cls.new_state = State()
         cls.new_state.name = "California"
 
+    @classmethod
+    def tearDownClass(cls):
+        del cls.new_state
+        try:
+            remove("file.json")
+        except FileNotFoundError:
+            pass
+
 
 
 
@@ -32,6 +40,16 @@ class TestState(unittest.TestCase):
         """ """
         new = self.value()
         self.assertEqual(type(new.name), str)
+
+
+    def test_States_dbtable(self):
+        '''
+            Check if the tablename is correct
+        '''
+        self.assertEqual(self.new_state.__tablename__, "states")
+
+    def test_State_inheritance(self):
+        self.assertIsInstance(self.new_state,Basemodel)
 
 
     @unittest.skipIf(storage == "db", "Testing database storage only")
